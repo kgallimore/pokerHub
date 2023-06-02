@@ -1,16 +1,21 @@
 import { SerialPort, ReadlineParser } from "serialport";
 
 const serialPorts: SerialPort[] = [];
-
+let currentState: { [key: string]: { [key: string]: string } } = {};
 SerialPort.list().then((ports) => {
   for (const port of ports) {
     if (port.manufacturer?.toLowerCase().includes("arduino")) {
+      const portNum = port.path.match(/\d+/)?.[0] as string;
       console.log("Found Arduino, attaching: " + port.path);
       const newPort = new SerialPort({ path: port.path, baudRate: 9600 });
       newPort.pipe(new ReadlineParser());
       serialPorts.push(newPort);
+      currentState[portNum] = {};
       newPort.on("data", (data) => {
-        console.log(data.toString());
+        var parsed: string = data.toString() as string;
+        if (parsed.includes(":")) {
+          parseMessage(parsed.trim(), parseInt(portNum));
+        }
       });
       newPort.on("error", (err) => {
         console.log(err);
@@ -36,3 +41,11 @@ process.on("SIGINT", function () {
   //graceful shutdown
   process.exit();
 });
+
+function parseMessage(message: string, comPort: number) {
+  const port = comPort.toString();
+  var splitMessage = message.split(":");
+  var readerNumber = splitMessage[0].match(/\d+/)?.[0] as string;
+  currentState[port] = { [readerNumber]: splitMessage[1] || "" };
+  console.log(currentState);
+}
