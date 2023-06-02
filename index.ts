@@ -1,5 +1,4 @@
 import { SerialPort, ReadlineParser } from "serialport";
-// Test Commit
 const serialPorts: SerialPort[] = [];
 let currentState: { [key: string]: { [key: string]: string } } = {};
 SerialPort.list().then((ports) => {
