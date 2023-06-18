@@ -1,5 +1,34 @@
 import { SerialPort, ReadlineParser } from "serialport";
+import { writeFileSync, readFileSync } from "fs";
+let codeLookup = readFileSync("cardCodes.json", "utf8");
 const serialPorts: SerialPort[] = [];
+let cards: { [key: string]: { suit: string; card: string } } = codeLookup
+  ? JSON.parse(codeLookup)
+  : {};
+let readCodes: string[] = [];
+let availablePlayingCardSuits = ["spades", "hearts", "diamonds", "clubs"];
+let availablePlayingCardValues = [
+  "ace",
+  "2",
+  "3",
+  "4",
+  "5",
+  "6",
+  "7",
+  "8",
+  "9",
+  "10",
+  "jack",
+  "queen",
+  "king",
+];
+let combos = availablePlayingCardSuits
+  .map((suit) => {
+    return availablePlayingCardValues.map((value) => {
+      return { suit: suit, card: value };
+    });
+  })
+  .flat();
 let currentState: { [key: string]: { [key: string]: string } } = {};
 SerialPort.list().then((ports) => {
   for (const port of ports) {
@@ -46,5 +75,19 @@ function parseMessage(message: string, comPort: number) {
   var splitMessage = message.split(":");
   var readerNumber = splitMessage[0].match(/\d+/)?.[0] as string;
   currentState[port] = { [readerNumber]: splitMessage[1] || "" };
+  if (readCodes.includes(splitMessage[1])) {
+    console.log("Card already read");
+    return;
+  }
+  readCodes.push(splitMessage[1]);
+  cards[splitMessage[1]] = combos[readCodes.length];
   console.log(currentState);
 }
+
+function exitHandler(exitCode: object) {
+  writeFileSync("cardCodes.json", JSON.stringify(cards));
+}
+
+process.on("exit", exitHandler.bind({ cleanup: true }));
+
+process.on("SIGINT", exitHandler.bind({ exit: true }));
