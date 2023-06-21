@@ -1,0 +1,41 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model CommPorts {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  commPort  Int
+  connected Boolean   @default(true)
+  sensors   Sensors[]
+}
+
+model Sensors {
+  id         Int       @id @default(autoincrement())
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  sensorId   Int
+  commPort   CommPorts @relation(fields: [commPortId], references: [id])
+  commPortId Int
+  card       Card?     @relation(fields: [cardId], references: [id])
+  cardId     Int?      @unique
+}
+
+model Card {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  suit      String
+  card      String
+  uid       String   @unique
+  sensors   Sensors?
+}
