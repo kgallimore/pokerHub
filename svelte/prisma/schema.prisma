@@ -14,7 +14,7 @@ model CommPorts {
   id        Int       @id @default(autoincrement())
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
-  commPort  Int
+  commPort  Int       @unique
   connected Boolean   @default(true)
   sensors   Sensors[]
 }
@@ -27,15 +27,15 @@ model Sensors {
   commPort   CommPorts @relation(fields: [commPortId], references: [id])
   commPortId Int
   card       Card?     @relation(fields: [cardId], references: [id])
-  cardId     Int?      @unique
+  cardId     Int?
 }
 
 model Card {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
   suit      String
   card      String
-  uid       String   @unique
-  sensors   Sensors?
+  uid       String    @unique
+  sensors   Sensors[]
 }

@@ -30,7 +30,7 @@ CREATE TABLE "Card" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Sensors_cardId_key" ON "Sensors"("cardId");
+CREATE UNIQUE INDEX "CommPorts_commPort_key" ON "CommPorts"("commPort");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Card_uid_key" ON "Card"("uid");
