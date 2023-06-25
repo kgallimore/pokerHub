@@ -1,2 +1,3 @@
 node_modules
 svelte/prisma/dev.db
+comm/.env

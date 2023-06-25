@@ -14,7 +14,7 @@ export const GET: RequestHandler = async () => {
 export const POST = (async ({ request }) => {
 	const newData = (await request.json()) as CommPortUpdate;
 	// Create an array with the number of sensors in the comm port
-	const c = Array.from(Array(newData.numberOfSensors).keys()).map((i) => ({ sensorId: i + 1 }));
+	const c = Array.from(Array(newData.numberOfSensors).keys()).map((i) => ({ sensorId: i }));
 	await prisma.commPorts.upsert({
 		where: { commPort: newData.commPort },
 		create: { commPort: newData.commPort, connected: newData.connected, sensors: { create: c } },

@@ -3,7 +3,6 @@ export interface SensorUpdate {
 	sensor: number;
 	value: string;
 }
-
 export interface CommPortUpdate {
 	commPort: number;
 	connected: boolean;

@@ -1,4 +1,12 @@
 -- CreateTable
+CREATE TABLE "ApiKeys" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL,
+    "value" TEXT NOT NULL
+);
+
+-- CreateTable
 CREATE TABLE "CommPorts" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -28,6 +36,9 @@ CREATE TABLE "Card" (
     "card" TEXT NOT NULL,
     "uid" TEXT NOT NULL
 );
+
+-- CreateIndex
+CREATE UNIQUE INDEX "ApiKeys_value_key" ON "ApiKeys"("value");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "CommPorts_commPort_key" ON "CommPorts"("commPort");

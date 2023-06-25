@@ -1,5 +1,5 @@
 import prisma from '$lib/prisma';
-import { json } from '@sveltejs/kit';
+import { json, error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 
 import type { SensorUpdate } from '$lib/comm';
@@ -16,27 +16,27 @@ export const POST = (async ({ request }) => {
 		where: { commPort: { commPort: newData.commPort }, sensorId: newData.sensor },
 		include: { card: true }
 	});
-	if (currentSensor?.card?.uid === newData.value) return new Response('Ok');
-	const targetCommPort = await prisma.commPorts.findFirst({
-		where: { commPort: newData.commPort },
-		select: { id: true }
+	console.log(newData, currentSensor);
+	if (currentSensor == null) throw error(400, { message: 'Unexpected Sensor' });
+	if (currentSensor?.card?.uid === newData.value)
+		throw error(400, { message: 'Card already registered' });
+	const [targetCommPort, targetCard] = await Promise.allSettled([
+		prisma.commPorts.findFirst({
+			where: { commPort: newData.commPort },
+			select: { id: true }
+		}),
+		prisma.card.findFirst({
+			where: { uid: newData.value },
+			select: { id: true }
+		})
+	]);
+	if (targetCommPort.status === 'rejected' || targetCommPort.value == null)
+		throw error(400, { message: 'Invalid Comm Port' });
+	if (targetCard.status === 'rejected' || (targetCard.value == null && newData.value != ''))
+		throw error(400, { message: 'Invalid Card' });
+	await prisma.sensors.update({
+		where: { id: currentSensor.id },
+		data: { cardId: targetCard.value?.id ?? null }
 	});
-	const targetCard = await prisma.card.findFirst({
-		where: { uid: newData.value },
-		select: { id: true }
-	});
-	if (targetCommPort == null || (targetCard == null && !newData.value)) return new Response('Fail');
-	if (currentSensor == null) {
-		await prisma.sensors.create({
-			data: { commPortId: targetCommPort.id, sensorId: newData.sensor, cardId: targetCard?.id }
-		});
-		return new Response('Ok');
-	} else {
-		prisma.sensors.update({
-			where: { id: currentSensor.id },
-			data: { cardId: targetCard?.id }
-		});
-	}
-
 	return new Response('Ok');
 }) satisfies RequestHandler;

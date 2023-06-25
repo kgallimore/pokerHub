@@ -10,6 +10,13 @@ datasource db {
   url      = "file:./dev.db"
 }
 
+model ApiKeys {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  value     String   @unique
+}
+
 model CommPorts {
   id        Int       @id @default(autoincrement())
   createdAt DateTime  @default(now())
