@@ -1,7 +1,7 @@
 export interface SensorUpdate {
 	commPort: number;
 	sensor: number;
-	value: string;
+	value: string[];
 }
 export interface CommPortUpdate {
 	commPort: number;

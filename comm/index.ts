@@ -6,7 +6,9 @@ import "dotenv/config";
 const serialPorts: {
   [port: string]: { port: SerialPort; numOfSensors: number; timeout: NodeJS.Timeout };
 } = {};
-let currentState: { [key: string]: { [key: string]: string } } = {};
+let currentState: {
+  [port: string]: { [sensor: string]: { sendRemoval?: NodeJS.Timeout; value: string }[] };
+} = {};
 usb.on("attach", (device) => {
   attachSerialPorts();
 });
@@ -85,7 +87,22 @@ function parseMessage(message: string, commPort: number) {
   const port = commPort.toString();
   var splitMessage = message.split(":");
   var readerNumber = splitMessage[0].match(/\d+/)?.[0] as string;
-  const cardId = splitMessage[1];
+  const cardIds = JSON.parse(splitMessage[1]);
+  if (
+    currentState[port][readerNumber] === undefined ||
+    currentState[port][readerNumber].length === 0
+  ) {
+    currentState[port][readerNumber] = [{ value: cardId }];
+    postSensorUpdate({ commPort, sensor: parseInt(readerNumber), value: [cardId] });
+    return;
+  }
+  if (!cardId) {
+    currentState[port][readerNumber][0].sendRemoval = setTimeout(() => {
+      currentState[port][readerNumber] = [{ value: "" }];
+      postSensorUpdate({ commPort, sensor: parseInt(readerNumber), value: [""] });
+    }, 1000);
+    return;
+  }
   currentState[port] = { [readerNumber]: cardId || "" };
   postSensorUpdate({ commPort, sensor: parseInt(readerNumber), value: cardId });
 }

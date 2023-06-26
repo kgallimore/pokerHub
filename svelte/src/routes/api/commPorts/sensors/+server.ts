@@ -16,7 +16,6 @@ export const POST = (async ({ request }) => {
 		where: { commPort: { commPort: newData.commPort }, sensorId: newData.sensor },
 		include: { card: true }
 	});
-	console.log(newData, currentSensor);
 	if (currentSensor == null) throw error(400, { message: 'Unexpected Sensor' });
 	if (currentSensor?.card?.uid === newData.value)
 		throw error(400, { message: 'Card already registered' });
