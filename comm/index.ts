@@ -20,6 +20,10 @@ function attachSerialPorts() {
         port.manufacturer?.toLowerCase().includes("arduino") &&
         Object.keys(serialPorts).includes(port.path) === false
       ) {
+        if (serialPorts[portNum]?.port.isOpen) {
+          console.log("Port already open, skipping: " + port.path);
+          continue;
+        }
         console.log("Found Arduino, attaching: " + port.path);
         const newPort = new SerialPort({ path: port.path, baudRate: 9600 });
         newPort.pipe(new ReadlineParser());
@@ -87,24 +91,43 @@ function parseMessage(message: string, commPort: number) {
   const port = commPort.toString();
   var splitMessage = message.split(":");
   var readerNumber = splitMessage[0].match(/\d+/)?.[0] as string;
-  const cardIds = JSON.parse(splitMessage[1]);
+  console.log("Read message: ", splitMessage[1]);
+  var cardIds: string[];
+  try {
+    cardIds = JSON.parse(splitMessage[1]);
+  } catch (e) {
+    console.log("Invalid JSON");
+    return;
+  }
   if (
     currentState[port][readerNumber] === undefined ||
     currentState[port][readerNumber].length === 0
   ) {
-    currentState[port][readerNumber] = [{ value: cardId }];
-    postSensorUpdate({ commPort, sensor: parseInt(readerNumber), value: [cardId] });
+    // If this is the first time the reader sent a card, set the value and send it
+    currentState[port][readerNumber] = [{ value: cardIds[0] }];
+    postSensorUpdate({ commPort, sensor: parseInt(readerNumber), value: cardIds });
     return;
   }
-  if (!cardId) {
+  if (!cardIds) {
+    // If the reader reports no cards, start a clock to send a removal message
     currentState[port][readerNumber][0].sendRemoval = setTimeout(() => {
       currentState[port][readerNumber] = [{ value: "" }];
       postSensorUpdate({ commPort, sensor: parseInt(readerNumber), value: [""] });
     }, 1000);
     return;
   }
-  currentState[port] = { [readerNumber]: cardId || "" };
-  postSensorUpdate({ commPort, sensor: parseInt(readerNumber), value: cardId });
+  // If there is already a card value, set the new array and send it
+  Object.values(currentState[port]).forEach((reader) => {
+    reader.forEach((sensor) => {
+      if (sensor.sendRemoval) clearTimeout(sensor.sendRemoval);
+    });
+  });
+  currentState[port] = {
+    [readerNumber]: cardIds.map((value) => {
+      return { value };
+    }),
+  };
+  postSensorUpdate({ commPort, sensor: parseInt(readerNumber), value: cardIds });
 }
 
 async function postSensorUpdate(data: SensorUpdate) {
@@ -121,7 +144,10 @@ async function postSensorUpdate(data: SensorUpdate) {
     .then(async (response) => {
       response.ok
         ? console.log("Posted update")
-        : console.log("Unable to post: " + response.statusText, await response.text());
+        : console.log(
+            "Unable to post " + JSON.stringify(data) + ": " + response.statusText,
+            await response.text()
+          );
     })
     .catch(function (err) {
       console.log("Unable to post -", err);

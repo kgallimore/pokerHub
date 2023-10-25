@@ -33,8 +33,7 @@ model Sensors {
   sensorId   Int
   commPort   CommPorts @relation(fields: [commPortId], references: [id])
   commPortId Int
-  card       Card?     @relation(fields: [cardId], references: [id])
-  cardId     Int?
+  card       Card[]
 }
 
 model Card {

@@ -1,6 +1,11 @@
 import prisma from '$lib/prisma';
 import { type Handle, error } from '@sveltejs/kit';
 
+prisma.sensors.deleteMany({}).then(() => {
+	prisma.commPorts.deleteMany({}).then(() => {
+		console.log('Deleted all sensors');
+	});
+});
 export const handle: Handle = async ({ resolve, event }) => {
 	// Apply CORS header for API routes
 	if (event.url.pathname.startsWith('/api')) {

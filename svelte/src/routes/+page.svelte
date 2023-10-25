@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-
+	import Octagon from '$lib/components/OctagonTable.svelte';
 	export let data;
 	onMount(() => {
 		setInterval(() => {
@@ -13,26 +13,30 @@
 	});
 </script>
 
-<div class="bg-slate-400">
+<div class="w-[calc(100vw-(100vw-100%))] h-screen p-4 flex justify-center">
+	<Octagon />
+</div>
+
+<div class="bg-slate-400 w-[calc(100vw-(100vw-100%))] h-screen">
 	{#if data?.state}
 		{#each data.state as item}
-			<p>Connected: {item.connected}</p>
 			<div class="grid grid-cols-{item.sensors.length}">
 				{#each item.sensors as sensor}
-					<div>
-						{#if sensor.card}
-							<img
-								src={`/playingCards/fronts/${sensor.card.suit}_${sensor.card.card}.svg`}
-								alt={`${sensor.card.card} of ${sensor.card.suit}`}
-							/>
-						{:else}
-							<img src={`/playingCards/backs/red.svg`} alt={`No card`} />
-						{/if}
+					<div class="flex">
+						{#each sensor.card as playingCard}
+							{#if playingCard?.card}
+								<img
+									src={`/playingCards/fronts/${playingCard.suit}_${playingCard.card}.svg`}
+									alt={`${playingCard.card} of ${playingCard.suit}`}
+									class="drop-shadow hover:drop-shadow-2xl pt-4 px-1"
+								/>
+							{:else}
+								<img src={`/playingCards/backs/red.svg`} alt={`No card`} />
+							{/if}
+						{/each}
 					</div>
 				{/each}
 			</div>
 		{/each}
 	{/if}
-	<h1>Welcome to SvelteKit</h1>
-	<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
 </div>

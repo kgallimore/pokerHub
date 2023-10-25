@@ -5,85 +5,97 @@
 
 #define NUMBER_READERS 2
 #define EXPECTED_NUM_CARDS 2
+#define CARD_READ_TIMEOUT 15
 
 PN532_SPI interface(SPI, 9);
 PN532_SPI interface2(SPI, 10);
 
-NfcAdapter nfc[NUMBER_READERS] = { NfcAdapter(interface), NfcAdapter(interface2)  };
+NfcAdapter nfc[NUMBER_READERS] = { NfcAdapter(interface), NfcAdapter(interface2) };
 
 class ReadTags {
 public:
-  String tagId = "";
-  int missedReads = 0;
+  unsigned long lastRead = 0;
   void reset() {
     tagId = "";
-    missedReads = 0;
+    lastRead = 0;
   }
-  bool missedRead(){
-    if(tagId == ""){
-      return false;
-    }
-    if(missedReads == 4){
-      reset();
-      return true;
-    }
-    missedReads++;
-    return false;
-  }
-  bool compareTags(String tag){
-    if(tag == tagId){
-      missedReads = 0;
+  bool compareTags(String tag) {
+    if (tag == tagId) {
+      lastRead = millis();
       return true;
     }
     return false;
   }
+  void setTag(String tag) {
+    lastRead = millis();
+    tagId = tag;
+  }
+  String getTag(){
+    return tagId;
+  }
+private:
+  String tagId = "";
 };
 
 class Sensor {
 public:
   ReadTags tags[2] = { ReadTags(), ReadTags() };
-  Sensor(int expectedNumCards){
+  Sensor(int expectedNumCards) {
     _expectedNumCards = expectedNumCards;
   }
   bool cardPresent() {
-    return tags[0].tagId != "" || tags[1].tagId != "";
+    return tags[0].lastRead != 0 || tags[1].lastRead != 0;
   }
   bool readCard(String tagId) {
-    bool sendUpdate = false;
     if (tagId == "") {
+      if(!cardPresent()){
+        return false;
+      }
       for (int i = 0; i < _expectedNumCards; i++) {
-        if (tags[i].missedRead()) {
-          sendUpdate = true;
+        if ((tags[i].lastRead + CARD_READ_TIMEOUT * 1000) >= millis()) {
+          return false;
         }
       }
-    }else if(tags[0].compareTags(tagId)){
-        sendUpdate = tags[1].missedRead();
-      }else if(tags[1].compareTags(tagId)){
-        sendUpdate = tags[0].missedRead();
-      } else if(tags[0].tagId == ""){
-        tags[0].tagId = tagId;
-        sendUpdate = true;
-      } else if(tags[1].tagId == ""){
-        tags[1].tagId = tagId;
-        sendUpdate = true;
+      for (int i = 0; i < _expectedNumCards; i++) {
+        tags[i].reset();
       }
-    
-    return sendUpdate;
+      return true;
+    }
+    int lowestRead = tags[0].lastRead;
+    int lowestReadInt = 0;
+    for (int i = 0; i < _expectedNumCards; i++) {
+      if(tags[i].getTag() == tagId){
+        return false;
+      }
+      if(tags[i].lastRead < lowestRead){
+        lowestRead = tags[i].lastRead;
+        lowestReadInt = i;
+      }
+    }
+
+    tags[lowestReadInt].setTag(tagId);
+
+
+    return true;
   }
   String getComm() {
-    char str[300] = "[\"";
+    String buildStr = "[\"";
     for (int i = 0; i < _expectedNumCards; i++) {
-        strcat (str,tags[0].tagId);
-        strcat(str, )
+      if(i !=0){
+        buildStr += ",\"";
       }
-    return "[\"" + tags[0].tagId + "\",\"" + tags[1].tagId + "\"]";
+      buildStr += tags[i].getTag();
+      buildStr += "\"";
+    }
+    buildStr += "]";
+    return buildStr;
   }
-  private:
-    int _expectedNumCards
+private:
+  int _expectedNumCards = 1;
 };
 
 String tagIds[NUMBER_READERS];
-Sensor sensors[NUMBER_READERS] = { Sensor(), Sensor()};
+Sensor sensors[NUMBER_READERS] = { Sensor(EXPECTED_NUM_CARDS), Sensor(EXPECTED_NUM_CARDS) };
 
 void setup(void) {
   Serial.begin(115200);
