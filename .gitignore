@@ -1,3 +1,6 @@
 node_modules
 svelte/prisma/dev.db
 comm/.env
+pcb/2WayReader/2WayReader-backups
+pcb/2WayReader/jlcpcb
+pcb/2WayReader/fp-info-cache
