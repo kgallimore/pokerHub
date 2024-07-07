@@ -1,39 +1,27 @@
-import prisma from '$lib/prisma';
-import { type Handle, error } from '@sveltejs/kit';
+import PocketBase from 'pocketbase';
+import type { TypedPocketBase } from "$lib/pocketbase-types"
+import {PB_ADMIN_EMAIL, PB_ADMIN_PASSWORD} from "$env/static/private";
 
-prisma.sensors.deleteMany({}).then(() => {
-	prisma.commPorts.deleteMany({}).then(() => {
-		console.log('Deleted all sensors');
-	});
-});
-export const handle: Handle = async ({ resolve, event }) => {
-	// Apply CORS header for API routes
-	if (event.url.pathname.startsWith('/api')) {
-		// Required for CORS to work
-		if (event.request.method === 'POST') {
-			const apiKey = event.request.headers.get('x-api-key');
-			if (apiKey == null)
-				throw error(401, {
-					message: 'Missing API Key'
-				});
-			const dbKey = await prisma.apiKeys.findFirst({ where: { value: apiKey } });
-			if (dbKey == null)
-				throw error(401, {
-					message: 'Invalid API Key'
-				});
-		} else if (event.request.method === 'OPTIONS') {
-			return new Response(null, {
-				headers: {
-					'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
-					'Access-Control-Allow-Origin': '*',
-					'Access-Control-Allow-Headers': '*'
-				}
-			});
-		}
-	}
-	const response = await resolve(event);
-	if (event.url.pathname.startsWith('/api')) {
-		response.headers.append('Access-Control-Allow-Origin', `*`);
-	}
-	return response;
-};
+export async function handle({ event, resolve }) {
+    event.locals.pb = new PocketBase('http://127.0.0.1:8090') as TypedPocketBase;
+    await event.locals.pb.admins.authWithPassword(PB_ADMIN_EMAIL, PB_ADMIN_PASSWORD);
+    // load the store data from the request cookie string
+    event.locals.pb.authStore.loadFromCookie(event.request.headers.get('cookie') || '');
+
+    try {
+        // get an up-to-date auth store state by verifying and refreshing the loaded auth model (if any)
+        if(event.locals.pb.authStore.isValid)
+            await event.locals.pb.collection('users').authRefresh();
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (_) {
+        // clear the auth store on failed refresh
+        event.locals.pb.authStore.clear();
+    }
+
+    const response = await resolve(event);
+
+    // send back the default 'pb_auth' cookie to the client with the latest store state
+    response.headers.append('set-cookie', event.locals.pb.authStore.exportToCookie({httpOnly: false}));
+
+    return response;
+}
