@@ -8,8 +8,8 @@
 #define EXPECTED_NUM_CARDS 2
 #define CARD_READ_TIMEOUT 15
 
-PN532_SPI interface(SPI, 9);
-PN532_SPI interface2(SPI, 10);
+PN532_SPI interface(SPI, 8);
+PN532_SPI interface2(SPI, 9);
 
 NfcAdapter nfc[NUMBER_READERS] = {NfcAdapter(interface), NfcAdapter(interface2)};
 

@@ -10,14 +10,19 @@ let currentState: {
   [port: string]: { [sensor: string]: { sendRemoval?: NodeJS.Timeout; value: string }[] };
 } = {};
 usb.on("attach", (device) => {
+  console.log("USB device attached");
   attachSerialPorts();
+});
+usb.on("detach", (device) => {
+  console.log("USB device detached");
 });
 function attachSerialPorts() {
   SerialPort.list().then((ports) => {
     for (const port of ports) {
       const portNum = port.path.match(/\d+/)?.[0] as string;
       if (
-        port.manufacturer?.toLowerCase().includes("arduino") &&
+        (port.manufacturer?.toLowerCase().includes("arduino") ||
+          port.manufacturer?.toLowerCase().includes("microsoft")) &&
         Object.keys(serialPorts).includes(port.path) === false
       ) {
         if (serialPorts[portNum]?.port.isOpen) {
@@ -131,8 +136,9 @@ function parseMessage(message: string, commPort: number) {
 }
 
 async function postSensorUpdate(data: SensorUpdate) {
+  console.log("Posting sensor update");
   if (serialPorts[data.commPort.toString()].numOfSensors === 0) return;
-  fetch("http://127.0.0.1:5173/api/commPorts/sensors", {
+  fetch("http://localhost:5173/api/commPorts/sensors", {
     method: "POST",
     mode: "cors",
     body: JSON.stringify(data),
@@ -155,8 +161,9 @@ async function postSensorUpdate(data: SensorUpdate) {
 }
 
 async function postCommPortUpdate(data: CommPortUpdate) {
+  console.log("Posting comm port update");
   if (serialPorts[data.commPort.toString()].numOfSensors === 0) return;
-  fetch("http://127.0.0.1:5173/api/commPorts", {
+  fetch("http://localhost:5173/api/commPorts", {
     method: "POST",
     mode: "cors",
     headers: {

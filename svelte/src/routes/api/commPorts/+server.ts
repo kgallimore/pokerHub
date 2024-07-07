@@ -1,5 +1,5 @@
 import prisma from '$lib/prisma';
-import { json } from '@sveltejs/kit';
+import { error, json } from '@sveltejs/kit';
 import type { CommPortUpdate } from '$lib/comm';
 
 import type { RequestHandler } from './$types';
@@ -12,9 +12,14 @@ export const GET: RequestHandler = async () => {
 };
 
 export const POST = (async ({ request }) => {
+	console.log('Comm port update posted');
 	const newData = (await request.json()) as CommPortUpdate;
+	console.table(newData);
 	// Create an array with the number of sensors in the comm port
-	const c = Array.from(Array(newData.numberOfSensors).keys()).map((i) => ({ sensorId: i }));
+	const currentComm = await prisma.commPorts.findFirst({ where: { commPort: newData.commPort } });
+	if (!currentComm && !newData.connected)
+		throw error(400, { message: "Can't create disconnected port" });
+	const c = Array.from(Array(newData.numberOfSensors ?? 1).keys()).map((i) => ({ sensorId: i }));
 	await prisma.commPorts.upsert({
 		where: { commPort: newData.commPort },
 		create: { commPort: newData.commPort, connected: newData.connected, sensors: { create: c } },

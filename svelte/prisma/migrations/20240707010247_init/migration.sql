@@ -22,9 +22,7 @@ CREATE TABLE "Sensors" (
     "updatedAt" DATETIME NOT NULL,
     "sensorId" INTEGER NOT NULL,
     "commPortId" INTEGER NOT NULL,
-    "cardId" INTEGER,
-    CONSTRAINT "Sensors_commPortId_fkey" FOREIGN KEY ("commPortId") REFERENCES "CommPorts" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
-    CONSTRAINT "Sensors_cardId_fkey" FOREIGN KEY ("cardId") REFERENCES "Card" ("id") ON DELETE SET NULL ON UPDATE CASCADE
+    CONSTRAINT "Sensors_commPortId_fkey" FOREIGN KEY ("commPortId") REFERENCES "CommPorts" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- CreateTable
@@ -37,6 +35,14 @@ CREATE TABLE "Card" (
     "uid" TEXT NOT NULL
 );
 
+-- CreateTable
+CREATE TABLE "_CardToSensors" (
+    "A" INTEGER NOT NULL,
+    "B" INTEGER NOT NULL,
+    CONSTRAINT "_CardToSensors_A_fkey" FOREIGN KEY ("A") REFERENCES "Card" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT "_CardToSensors_B_fkey" FOREIGN KEY ("B") REFERENCES "Sensors" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "ApiKeys_value_key" ON "ApiKeys"("value");
 
@@ -45,3 +51,9 @@ CREATE UNIQUE INDEX "CommPorts_commPort_key" ON "CommPorts"("commPort");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Card_uid_key" ON "Card"("uid");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "_CardToSensors_AB_unique" ON "_CardToSensors"("A", "B");
+
+-- CreateIndex
+CREATE INDEX "_CardToSensors_B_index" ON "_CardToSensors"("B");
