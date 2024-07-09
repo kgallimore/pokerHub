@@ -1,15 +1,14 @@
 <script lang="ts">
-	import type { PageData } from './$types';
 	import { onDestroy, onMount } from 'svelte';
 	import OctagonTable from '$lib/components/OctagonTable.svelte';
 	import type { CardsResponse, SensorsResponse, TypedPocketBase } from '$lib/pocketbase-types';
 	import PocketBase from 'pocketbase';
 	import { PUBLIC_PB_URL } from '$env/static/public';
-	import type { CardDetails, CardHand, TableCardDetails } from '$lib';
+	import type { CardHand, TableCardDetails } from '$lib';
 	let { data } = $props();
 	let sensorList = $state(data.sensors);
 	let pb: TypedPocketBase | null;
-	onMount(() => {
+	$effect(() => {
 		pb = new PocketBase(PUBLIC_PB_URL) as TypedPocketBase;
 		pb.authStore.loadFromCookie(document.cookie || '');
 		pb.collection('Sensors').subscribe<SensorsResponse<{cards:CardsResponse[]}>>('*', (read) => {
