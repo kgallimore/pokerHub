@@ -1,35 +1,102 @@
 <script lang="ts">
-	import { T,useLoader } from '@threlte/core';
+	import { T, useThrelte } from '@threlte/core';
 	import { interactivity } from '@threlte/extras';
 	import { spring } from 'svelte/motion';
-	import { Shape, TextureLoader  } from 'three';
-    const { position, rz }: {position:{z:number,x:number,y:number}, rz:number} = $props();
-	const scale = spring(.5);
-	interactivity();
+	import { CanvasTexture } from 'three';
+	import { BackTexture } from '$lib/BackTexture.svelte';
+	import type { CardDetails } from '$lib';
+	const { invalidate } = useThrelte();
+	const {
+		position,
+		rz,
+		cardDetails
+	}: { position: { z?: number; x?: number; y?: number }; rz?: number; cardDetails?: CardDetails } =
+		$props();
+	let lastWasCard = !!cardDetails;
+	const scale = spring(0.5);
+	const flipCard = spring(cardDetails ? 0 : Math.PI);
 
-	const shape = new Shape();
-	const length = 3,
-		width = 2;
-	shape.moveTo(-length/2, -width/2 -0.1);
-	shape.lineTo(-length/2, width/2 - 0.1);
-	shape.arc(0.1, 0, 0.1, Math.PI, Math.PI / 2, true);
-	shape.lineTo(length/2 - 0.1, width/2);
-	shape.arc(0, -0.1, 0.1, Math.PI / 2, Math.PI * 2, true);
-	shape.lineTo(length/2, -width/2 -0.1);
-	shape.arc(-0.1, 0, 0.1, 0, -Math.PI / 2, true);
-	shape.lineTo(-length/2+0.1, -width/2-0.2);
-	shape.arc(0, 0.1, 0.1, -Math.PI / 2, Math.PI, true);
-	const extrudeSettings = {
-		steps: 1,
-		depth: 0.01,
-		bevelEnabled: false
+	interactivity();
+	const frontCtx = document.createElement('canvas').getContext('2d') as CanvasRenderingContext2D;
+	const frontImg = new Image();
+	frontImg.src = cardDetails
+		? `playingCards/fronts/${cardDetails.suit}_${cardDetails.rank}.svg`
+		: 'playingCards/other/blank_card.svg';
+	frontImg.onload = () => {
+		frontCtx.drawImage(frontImg, 0, 0);
+		frontTexture!.needsUpdate = true;
 	};
-    const backTexture = useLoader(TextureLoader).load('playingCards/pcback.jpg')
+	frontCtx.canvas.width = 234;
+	frontCtx.canvas.height = 333;
+	let frontTexture = new CanvasTexture(frontCtx.canvas);
+
+	$effect(() => {
+		const frontImg = new Image();
+		frontImg.src = cardDetails
+			? `playingCards/fronts/${cardDetails.suit}_${cardDetails.rank}.svg`
+			: 'playingCards/other/blank_card.svg';
+			if(!cardDetails || lastWasCard)flipCard.set(Math.PI);
+			lastWasCard = !!cardDetails;
+		frontImg.onload = () => {
+			frontCtx.drawImage(frontImg, 0, 0);
+			flipCard.set(cardDetails ? 0 : Math.PI);
+			frontTexture!.needsUpdate = true;
+			invalidate();
+		};
+	});
+	$effect(() => {
+		return () => {
+			if (frontCtx.canvas && document.contains(frontCtx.canvas))
+				document.removeChild(frontCtx.canvas);
+		};
+	});
+	let yPos = $state(position.y ?? 0);
+	scale.subscribe((value) => {
+		yPos = position.y ?? 0 + value;
+	});
+	$inspect(yPos)
 </script>
-{#await backTexture then value}
-<T.Mesh rotation.x={-Math.PI / 2} rotation.z={rz} position={[position.x,position.y,position.z]} scale={$scale} 	onpointerenter={() => scale.set(1)}
-	onpointerleave={() => scale.set(.5)} castShadow>
-	<T.ExtrudeGeometry args={[shape, extrudeSettings]} />
-	<T.MeshBasicMaterial map={value} />
+<T.Mesh
+	position={[position.x ?? 0,(position.y ?? 0) + $scale, position.z ?? 0]}
+	rotation.y={rz ?? 0}
+	rotation.z={$flipCard}
+	scale={$scale}
+	onpointerenter={() => scale.set(1)}
+	onpointerleave={() => scale.set(0.5)}
+	castShadow
+	receiveShadow
+>
+	<T.BoxGeometry args={[2.34, 0.01, 3.33]}/>
+	{#each [...Array(2).keys()] as index}
+		<T.MeshBasicMaterial
+			color="white"
+			attach={(parent: { material: any[] }, self: any) => {
+				if (Array.isArray(parent.material)) parent.material = [...parent.material, self];
+				else parent.material = [self];
+			}}
+		/>
+	{/each}
+	<T.MeshBasicMaterial
+		map={frontTexture}
+		attach={(parent: { material: any[] }, self: any) => {
+			if (Array.isArray(parent.material)) parent.material = [...parent.material, self];
+			else parent.material = [self];
+		}}
+	/>
+	<T.MeshBasicMaterial
+		map={BackTexture.texture}
+		attach={(parent: { material: any[] }, self: any) => {
+			if (Array.isArray(parent.material)) parent.material = [...parent.material, self];
+			else parent.material = [self];
+		}}
+	/>
+	{#each [...Array(2).keys()] as index}
+		<T.MeshBasicMaterial
+			color="white"
+			attach={(parent: { material: any[] }, self: any) => {
+				if (Array.isArray(parent.material)) parent.material = [...parent.material, self];
+				else parent.material = [self];
+			}}
+		/>
+	{/each}
 </T.Mesh>
-{/await}

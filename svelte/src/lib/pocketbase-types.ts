@@ -59,9 +59,25 @@ export type CommPortsRecord = {
 	sensors?: RecordIdString[]
 }
 
+export enum SensorsPositionOptions {
+	"E1" = "1",
+	"E2" = "2",
+	"E3" = "3",
+	"E4" = "4",
+	"E5" = "5",
+	"E6" = "6",
+	"E7" = "7",
+	"E8" = "8",
+	"r1" = "r1",
+	"r2" = "r2",
+	"r3" = "r3",
+	"r4" = "r4",
+	"r5" = "r5",
+}
 export type SensorsRecord = {
 	cards?: RecordIdString[]
 	commPort: RecordIdString
+	position?: SensorsPositionOptions
 }
 
 export type UsersRecord = {

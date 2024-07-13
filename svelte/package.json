@@ -3,7 +3,7 @@
 	"version": "0.0.1",
 	"private": true,
 	"scripts": {
-		"dev": "vite dev",
+		"dev": "concurrently --kill-others \"npx vite dev\" \"npm run pocket:serve\"",
 		"build": "vite build",
 		"preview": "vite preview",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
@@ -11,7 +11,8 @@
 		"lint": "prettier --check . && eslint .",
 		"format": "prettier --write .",
 		"pocket": "cd pb && go run main.go serve",
-		"pocket:build": "cd pb && CGO_ENABLED=0 go build",
+		"pocket:build": "cd pb && go env -w CGO_ENABLED=0 && go build",
+		"pocket:serve": "cd pb && pocketbase serve",
 		"types": "npx pocketbase-typegen --db ./pb/pb_data/data.db --out src/lib/pocketbase-types.ts",
 		"seed": "tsx --env-file=.env seed.ts"
 	},
@@ -23,6 +24,7 @@
 		"@types/eslint": "^8.56.7",
 		"@types/node": "^20.14.10",
 		"autoprefixer": "^10.4.19",
+		"concurrently": "^8.2.2",
 		"daisyui": "^4.12.10",
 		"eslint": "^9.0.0",
 		"eslint-config-prettier": "^9.1.0",

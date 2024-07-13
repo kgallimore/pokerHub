@@ -1,10 +1,9 @@
 <script lang="ts">
-	import { onDestroy, onMount } from 'svelte';
 	import OctagonTable from '$lib/components/OctagonTable.svelte';
 	import type { CardsResponse, SensorsResponse, TypedPocketBase } from '$lib/pocketbase-types';
 	import PocketBase from 'pocketbase';
 	import { PUBLIC_PB_URL } from '$env/static/public';
-	import type { CardHand, TableCardDetails } from '$lib';
+	import type { TableCardDetails } from '$lib';
 	let { data } = $props();
 	let sensorList = $state(data.sensors);
 	let pb: TypedPocketBase | null;
@@ -27,21 +26,21 @@
 					throw 'Unknown action type';
 			}
 		}, {expand: 'cards'});
+		if(sensorList.length === 0 && pb){
+		pb.collection('Sensors').getFullList({expand: 'cards'});
+		}
+		return pb.collection('Sensors').unsubscribe;
 	});
-	onDestroy(() => {
-		pb?.collection('Sensors').unsubscribe();
-	});
+
 	let tableCardDetails = $derived.by(()=>{
-		let outputArray: Array<CardHand> = [];
+		let outputArray: TableCardDetails = {};
 		for(let i = 0; i < 8; i++){
 			const cards = sensorList[i]?.expand?.cards;
-			if(cards){
-				outputArray.push([cards[0], cards[1]] as CardHand);
-			}else{
-				outputArray.push([]);
+			if(cards && sensorList[i].position != null){
+				outputArray[sensorList[i].position] = [cards[0], cards[1]];
 			}
 		}
-		return outputArray as TableCardDetails['playerHands'];
+		return outputArray;
 	});
 </script>
 
@@ -57,30 +56,4 @@
 			<br>
 		{/each}
 	{/if}
-	<!-- {#each sensor.cards as card}
-		Card: {card}
-	{/each} -->
 {/each}
-<!-- <div class="bg-slate-400 w-[calc(100vw-(100vw-100%))] h-screen">
-	{#if data?.state}
-		{#each data.state as item}
-			<div class="grid grid-cols-{item.sensors.length}">
-				{#each item.sensors as sensor}
-					<div class="flex">
-						{#each sensor.card as playingCard}
-							{#if playingCard?.card}
-								<img
-									src={`/playingCards/fronts/${playingCard.suit}_${playingCard.card}.svg`}
-									alt={`${playingCard.card} of ${playingCard.suit}`}
-									class="drop-shadow hover:drop-shadow-2xl pt-4 px-1"
-								/>
-							{:else}
-								<img src={`/playingCards/backs/red.svg`} alt={`No card`} />
-							{/if}
-						{/each}
-					</div>
-				{/each}
-			</div>
-		{/each}
-	{/if}
-</div> -->
