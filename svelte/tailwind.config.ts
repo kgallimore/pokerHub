@@ -1,3 +1,4 @@
+import tailwindCss3d from "tailwindcss-3d";
 /** @type {import('tailwindcss').Config} */
 export default {
 	content: ['./src/**/*.{html,js,svelte,ts}'],
@@ -5,5 +6,5 @@ export default {
 	theme: {
 		extend: {}
 	},
-	plugins: []
+	plugins: [tailwindCss3d]
 };

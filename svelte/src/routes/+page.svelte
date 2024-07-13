@@ -25,11 +25,12 @@
 				default:
 					throw 'Unknown action type';
 			}
-		}, {expand: 'cards'});
-		if(sensorList.length === 0 && pb){
-		pb.collection('Sensors').getFullList({expand: 'cards'});
-		}
-		return pb.collection('Sensors').unsubscribe;
+		}, {expand: 'cards'}).then(async () => {
+			if(sensorList.length === 0 && pb){
+				sensorList = await pb.collection('Sensors').getFullList({expand: 'cards'});
+			}
+		})
+		return ()=>{pb?.collection('Sensors').unsubscribe()};
 	});
 
 	let tableCardDetails = $derived.by(()=>{
@@ -44,16 +45,6 @@
 	});
 </script>
 
-<div class="w-[calc(100vw-(100vw-100%))] h-screen p-4 flex justify-center">
+<div class="w-[calc(100vw-(100vw-100%))] h-screen md:p-20 p-4 flex justify-center overflow-hidden">
 	<OctagonTable playerHands={tableCardDetails} />
 </div>
-{#each sensorList as sensor}
-	Sensor: {sensor.id}
-	<br>
-	{#if sensor.expand}
-		{#each sensor.expand.cards as card}
-		{card.rank} of {card.suit} 
-			<br>
-		{/each}
-	{/if}
-{/each}
