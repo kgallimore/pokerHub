@@ -52,7 +52,11 @@
         }
       },
       "diff_pair_dimensions": [],
-      "drc_exclusions": [],
+      "drc_exclusions": [
+        "items_not_allowed|154234750|106929387|2e819541-e445-41dd-a6da-7997bf9c1381|00000000-0000-0000-0000-000000000000",
+        "items_not_allowed|155822250|107421000|8ff3db8e-b39f-403b-b565-1de6f95cc636|00000000-0000-0000-0000-000000000000",
+        "starved_thermal|151037250|94866000|71c432e4-0bb6-4136-8195-57fe988eeed7|69d11838-7635-4528-9400-4d5b7816245e|F.Cu"
+      ],
       "meta": {
         "version": 2
       },
@@ -73,6 +77,7 @@
         "footprint_type_mismatch": "ignore",
         "hole_clearance": "error",
         "hole_near_hole": "error",
+        "holes_co_located": "warning",
         "invalid_outline": "error",
         "isolated_copper": "warning",
         "item_on_disabled_layer": "error",
@@ -430,7 +435,7 @@
     "pinned_symbol_libs": []
   },
   "meta": {
-    "filename": "2WayReader.kicad_pro",
+    "filename": "3WayESP32.kicad_pro",
     "version": 1
   },
   "net_settings": {
@@ -476,6 +481,7 @@
   },
   "schematic": {
     "annotate_start_num": 0,
+    "bom_export_filename": "",
     "bom_fmt_presets": [],
     "bom_fmt_settings": {
       "field_delimiter": ",",
@@ -561,6 +567,14 @@
       "version": 1
     },
     "net_format_name": "",
+    "ngspice": {
+      "fix_include_paths": true,
+      "meta": {
+        "version": 0
+      },
+      "model_mode": 4,
+      "workbook_filename": ""
+    },
     "page_layout_descr_file": "",
     "plot_directory": "",
     "spice_current_sheet_as_root": false,

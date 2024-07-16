@@ -329,23 +329,23 @@
 				)
 			)
 		)
-		(symbol "Mechanical:MountingHole"
+		(symbol "Mechanical:MountingHole_Pad"
+			(pin_numbers hide)
 			(pin_names
-				(offset 1.016)
-			)
+				(offset 1.016) hide)
 			(exclude_from_sim yes)
 			(in_bom no)
 			(on_board yes)
 			(property "Reference" "H"
-				(at 0 5.08 0)
+				(at 0 6.35 0)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
 				)
 			)
-			(property "Value" "MountingHole"
-				(at 0 3.175 0)
+			(property "Value" "MountingHole_Pad"
+				(at 0 4.445 0)
 				(effects
 					(font
 						(size 1.27 1.27)
@@ -370,7 +370,7 @@
 					(hide yes)
 				)
 			)
-			(property "Description" "Mounting Hole without connection"
+			(property "Description" "Mounting Hole with connection"
 				(at 0 0 0)
 				(effects
 					(font
@@ -388,7 +388,7 @@
 					(hide yes)
 				)
 			)
-			(property "ki_fp_filters" "MountingHole*"
+			(property "ki_fp_filters" "MountingHole*Pad*"
 				(at 0 0 0)
 				(effects
 					(font
@@ -397,9 +397,9 @@
 					(hide yes)
 				)
 			)
-			(symbol "MountingHole_0_1"
+			(symbol "MountingHole_Pad_0_1"
 				(circle
-					(center 0 0)
+					(center 0 1.27)
 					(radius 1.27)
 					(stroke
 						(width 1.27)
@@ -407,6 +407,26 @@
 					)
 					(fill
 						(type none)
+					)
+				)
+			)
+			(symbol "MountingHole_Pad_1_1"
+				(pin input line
+					(at 0 -2.54 90)
+					(length 2.54)
+					(name "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
 					)
 				)
 			)
@@ -1324,6 +1344,38 @@
 			)
 		)
 	)
+	(no_connect
+		(at 129.54 111.76)
+		(uuid "21d85767-df5e-4470-9387-331bb8f69a7c")
+	)
+	(no_connect
+		(at 148.59 140.97)
+		(uuid "4e18178c-b435-4804-b21d-3ba0a56989ab")
+	)
+	(no_connect
+		(at 99.06 129.54)
+		(uuid "970b6af3-00db-48f3-b883-fc86f9444efa")
+	)
+	(no_connect
+		(at 125.73 111.76)
+		(uuid "c0f9b771-22f3-4eea-8758-ab7c117a0736")
+	)
+	(no_connect
+		(at 99.06 137.16)
+		(uuid "c33db60c-fd48-41dc-8441-d33ae01484b3")
+	)
+	(no_connect
+		(at 99.06 133.35)
+		(uuid "d8fb4e59-50e2-4953-8453-05a51b889e5d")
+	)
+	(no_connect
+		(at 148.59 118.11)
+		(uuid "f46ba32d-5c89-4f56-b349-760229ac5f23")
+	)
+	(no_connect
+		(at 99.06 140.97)
+		(uuid "f64e5f66-5174-4c16-9005-0868b13855ae")
+	)
 	(wire
 		(pts
 			(xy 95.25 138.43) (xy 95.25 125.73)
@@ -1767,6 +1819,73 @@
 		)
 	)
 	(symbol
+		(lib_id "Mechanical:MountingHole_Pad")
+		(at 116.84 157.48 0)
+		(unit 1)
+		(exclude_from_sim yes)
+		(in_bom no)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "1745fcda-9c36-45ce-8a78-9c38cd948a57")
+		(property "Reference" "H2"
+			(at 119.38 154.9399 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "MountingHole_Pad"
+			(at 119.38 157.4799 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "MountingHole:MountingHole_3.2mm_M3_DIN965_Pad"
+			(at 116.84 157.48 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 116.84 157.48 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Mounting Hole with connection"
+			(at 116.84 157.48 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "7c869d0f-432c-4388-9b5a-03086d29f74b")
+		)
+		(instances
+			(project "3WayESP32"
+				(path "/717672ee-95d7-4dd5-b8ca-71a6f44302e9"
+					(reference "H2")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Connector:Conn_01x06_Pin")
 		(at 69.85 138.43 0)
 		(unit 1)
@@ -1840,70 +1959,6 @@
 			(project "2WayReader"
 				(path "/717672ee-95d7-4dd5-b8ca-71a6f44302e9"
 					(reference "J3")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Mechanical:MountingHole")
-		(at 142.24 172.72 0)
-		(unit 1)
-		(exclude_from_sim yes)
-		(in_bom no)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "242ec7db-04d5-4feb-82bb-02d7fce13a77")
-		(property "Reference" "H4"
-			(at 144.78 171.4499 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "MountingHole"
-			(at 144.78 173.9899 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "MountingHole:MountingHole_3.2mm_M3"
-			(at 142.24 172.72 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 142.24 172.72 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Mounting Hole without connection"
-			(at 142.24 172.72 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(instances
-			(project "2WayReader"
-				(path "/717672ee-95d7-4dd5-b8ca-71a6f44302e9"
-					(reference "H4")
 					(unit 1)
 				)
 			)
@@ -2020,17 +2075,83 @@
 		)
 	)
 	(symbol
-		(lib_id "Mechanical:MountingHole")
-		(at 120.65 167.64 0)
+		(lib_id "power:GND")
+		(at 116.84 172.72 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "50f9bb5d-59f4-42ed-a12c-89e725eed2df")
+		(property "Reference" "#PWR012"
+			(at 116.84 179.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 116.84 177.8 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 116.84 172.72 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 116.84 172.72 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 116.84 172.72 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "28385849-eff7-4ae9-9e91-f64f3b60a14b")
+		)
+		(instances
+			(project "3WayESP32"
+				(path "/717672ee-95d7-4dd5-b8ca-71a6f44302e9"
+					(reference "#PWR012")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Mechanical:MountingHole_Pad")
+		(at 93.98 170.18 0)
 		(unit 1)
 		(exclude_from_sim yes)
 		(in_bom no)
 		(on_board yes)
 		(dnp no)
 		(fields_autoplaced yes)
-		(uuid "49b73905-2304-4dc4-afee-c82ea35d839b")
-		(property "Reference" "H1"
-			(at 123.19 166.3699 0)
+		(uuid "5b48d61e-8f60-4821-a603-219bbe923ac1")
+		(property "Reference" "H3"
+			(at 96.52 167.6399 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2038,8 +2159,8 @@
 				(justify left)
 			)
 		)
-		(property "Value" "MountingHole"
-			(at 123.19 168.9099 0)
+		(property "Value" "MountingHole_Pad"
+			(at 96.52 170.1799 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2047,8 +2168,8 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "MountingHole:MountingHole_3.2mm_M3"
-			(at 120.65 167.64 0)
+		(property "Footprint" "MountingHole:MountingHole_3.2mm_M3_Pad"
+			(at 93.98 170.18 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2057,7 +2178,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 120.65 167.64 0)
+			(at 93.98 170.18 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2065,19 +2186,22 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Mounting Hole without connection"
-			(at 120.65 167.64 0)
+		(property "Description" "Mounting Hole with connection"
+			(at 93.98 170.18 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 				(hide yes)
 			)
+		)
+		(pin "1"
+			(uuid "2e810165-2be0-40e9-9597-54276dedc991")
 		)
 		(instances
-			(project "2WayReader"
+			(project "3WayESP32"
 				(path "/717672ee-95d7-4dd5-b8ca-71a6f44302e9"
-					(reference "H1")
+					(reference "H3")
 					(unit 1)
 				)
 			)
@@ -2151,35 +2275,17 @@
 		)
 	)
 	(symbol
-		(lib_id "Mechanical:MountingHole")
-		(at 142.24 166.37 0)
+		(lib_id "power:GND")
+		(at 93.98 160.02 0)
 		(unit 1)
-		(exclude_from_sim yes)
-		(in_bom no)
+		(exclude_from_sim no)
+		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(fields_autoplaced yes)
-		(uuid "7a811d3d-8f3f-4f3a-b2fa-9775bc98f1c4")
-		(property "Reference" "H2"
-			(at 144.78 165.0999 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "MountingHole"
-			(at 144.78 167.6399 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "MountingHole:MountingHole_3.2mm_M3"
-			(at 142.24 166.37 0)
+		(uuid "84026b8f-b9ed-4c56-acd0-909f322b47c9")
+		(property "Reference" "#PWR03"
+			(at 93.98 166.37 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2187,8 +2293,16 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
-			(at 142.24 166.37 0)
+		(property "Value" "GND"
+			(at 93.98 165.1 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 93.98 160.02 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2196,19 +2310,97 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Mounting Hole without connection"
-			(at 142.24 166.37 0)
+		(property "Datasheet" ""
+			(at 93.98 160.02 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 				(hide yes)
 			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 93.98 160.02 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "96a0d570-5ecd-4998-b225-f90c38b255ca")
 		)
 		(instances
-			(project "2WayReader"
+			(project "3WayESP32"
 				(path "/717672ee-95d7-4dd5-b8ca-71a6f44302e9"
-					(reference "H2")
+					(reference "#PWR03")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 116.84 160.02 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "919d6930-1c0a-493c-9751-9b1d82a97e7d")
+		(property "Reference" "#PWR04"
+			(at 116.84 166.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 116.84 165.1 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 116.84 160.02 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 116.84 160.02 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 116.84 160.02 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "0b2648db-8d0e-4f74-88b5-10414b5e48e3")
+		)
+		(instances
+			(project "3WayESP32"
+				(path "/717672ee-95d7-4dd5-b8ca-71a6f44302e9"
+					(reference "#PWR04")
 					(unit 1)
 				)
 			)
@@ -2428,17 +2620,17 @@
 		)
 	)
 	(symbol
-		(lib_id "Mechanical:MountingHole")
-		(at 100.33 167.64 0)
+		(lib_id "Mechanical:MountingHole_Pad")
+		(at 116.84 170.18 0)
 		(unit 1)
 		(exclude_from_sim yes)
 		(in_bom no)
 		(on_board yes)
 		(dnp no)
 		(fields_autoplaced yes)
-		(uuid "a1775daa-021a-4d03-9653-95d53482f1bf")
-		(property "Reference" "H3"
-			(at 102.87 166.3699 0)
+		(uuid "a658e80a-601e-43e7-9f81-4864131ef9bb")
+		(property "Reference" "H4"
+			(at 119.38 167.6399 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2446,8 +2638,8 @@
 				(justify left)
 			)
 		)
-		(property "Value" "MountingHole"
-			(at 102.87 168.9099 0)
+		(property "Value" "MountingHole_Pad"
+			(at 119.38 170.1799 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2455,8 +2647,8 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "MountingHole:MountingHole_3.2mm_M3"
-			(at 100.33 167.64 0)
+		(property "Footprint" "MountingHole:MountingHole_3.2mm_M3_Pad"
+			(at 116.84 170.18 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2465,7 +2657,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 100.33 167.64 0)
+			(at 116.84 170.18 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2473,19 +2665,22 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Mounting Hole without connection"
-			(at 100.33 167.64 0)
+		(property "Description" "Mounting Hole with connection"
+			(at 116.84 170.18 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 				(hide yes)
 			)
+		)
+		(pin "1"
+			(uuid "6c0b04cd-abf1-4dd2-b718-8d85239bcefc")
 		)
 		(instances
-			(project "2WayReader"
+			(project "3WayESP32"
 				(path "/717672ee-95d7-4dd5-b8ca-71a6f44302e9"
-					(reference "H3")
+					(reference "H4")
 					(unit 1)
 				)
 			)
@@ -2693,6 +2888,73 @@
 		)
 	)
 	(symbol
+		(lib_id "Mechanical:MountingHole_Pad")
+		(at 93.98 157.48 0)
+		(unit 1)
+		(exclude_from_sim yes)
+		(in_bom no)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "c819857d-7302-4141-b6a7-29ab6d7afd48")
+		(property "Reference" "H1"
+			(at 96.52 154.9399 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "MountingHole_Pad"
+			(at 96.52 157.4799 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "MountingHole:MountingHole_3.2mm_M3_DIN965_Pad"
+			(at 93.98 157.48 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 93.98 157.48 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Mounting Hole with connection"
+			(at 93.98 157.48 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "cf4b31ad-c483-435f-abeb-9bfb3b654ec2")
+		)
+		(instances
+			(project ""
+				(path "/717672ee-95d7-4dd5-b8ca-71a6f44302e9"
+					(reference "H1")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Connector:Conn_01x06_Pin")
 		(at 69.85 121.92 0)
 		(unit 1)
@@ -2766,6 +3028,72 @@
 			(project "2WayReader"
 				(path "/717672ee-95d7-4dd5-b8ca-71a6f44302e9"
 					(reference "J2")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 93.98 172.72 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "e43b01c9-1583-4c24-939c-90d454cbb0c4")
+		(property "Reference" "#PWR011"
+			(at 93.98 179.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 93.98 177.8 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 93.98 172.72 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 93.98 172.72 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 93.98 172.72 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "46e551dc-1b7f-4993-9a5f-fcbceb47e8e7")
+		)
+		(instances
+			(project "3WayESP32"
+				(path "/717672ee-95d7-4dd5-b8ca-71a6f44302e9"
+					(reference "#PWR011")
 					(unit 1)
 				)
 			)
