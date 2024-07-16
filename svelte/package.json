@@ -1,29 +1,31 @@
 {
-	"name": "svelterewrite",
+	"name": "pocketsvelte",
 	"version": "0.0.1",
 	"private": true,
 	"scripts": {
-		"dev": "vite dev",
+		"dev": "concurrently --kill-others \"npx vite dev\" \"npm run pocket:serve\"",
 		"build": "vite build",
 		"preview": "vite preview",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"lint": "prettier --check . && eslint .",
 		"format": "prettier --write .",
-		"migrate": "prisma migrate dev --name init"
-	},
-	"prisma": {
-		"seed": "tsx prisma/seed.ts"
+		"pocket": "cd pb && go run main.go serve",
+		"pocket:build": "cd pb && go env -w CGO_ENABLED=0 && go build",
+		"pocket:serve": "cd pb && pocketbase serve",
+		"types": "npx pocketbase-typegen --db ./pb/pb_data/data.db --out src/lib/pocketbase-types.ts",
+		"seed": "tsx --env-file=.env seed.ts"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^3.0.0",
 		"@sveltejs/adapter-node": "^5.2.0",
 		"@sveltejs/kit": "^2.0.0",
 		"@sveltejs/vite-plugin-svelte": "^3.0.0",
-		"@types/bcrypt": "^5.0.2",
 		"@types/eslint": "^8.56.7",
 		"@types/node": "^20.14.10",
 		"autoprefixer": "^10.4.19",
+		"concurrently": "^8.2.2",
+		"daisyui": "^4.12.10",
 		"eslint": "^9.0.0",
 		"eslint-config-prettier": "^9.1.0",
 		"eslint-plugin-svelte": "^2.36.0",
@@ -31,11 +33,10 @@
 		"postcss": "^8.4.39",
 		"prettier": "^3.1.1",
 		"prettier-plugin-svelte": "^3.1.2",
-		"prisma": "^5.16.1",
-		"svelte": "^5.0.0-next.1",
+		"svelte": "^5.0.0-next.183",
 		"svelte-check": "^3.6.0",
 		"tailwindcss": "^3.4.4",
-		"ts-node": "^10.9.2",
+		"tailwindcss-3d": "^1.0.6",
 		"tslib": "^2.4.1",
 		"tsx": "^4.16.2",
 		"typescript": "^5.0.0",
@@ -44,7 +45,11 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@prisma/client": "^5.16.1",
-		"bcrypt": "^5.1.1"
+		"@threlte/core": "^8.0.0-next.8",
+		"@threlte/extras": "^9.0.0-next.13",
+		"@types/three": "^0.166.0",
+		"dotenv": "^16.4.5",
+		"pocketbase": "^0.21.3",
+		"three": "^0.166.1"
 	}
 }
