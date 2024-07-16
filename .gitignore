@@ -7,3 +7,6 @@ pcb/2WayReader/fp-info-cache
 svelteold/
 svelte/pb/*.exe
 png/
+pcb/*/jlcpcb
+fp-info-cache
+pcb/**/*.lck
