@@ -4,7 +4,7 @@
 	"private": true,
 	"scripts": {
 		"dev": "concurrently --kill-others \"npx vite dev\" \"npm run pocket:serve\"",
-		"build": "vite build",
+		"build": "vite build & cd ../comm && npm run build",
 		"preview": "vite preview",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
@@ -14,29 +14,39 @@
 		"pocket:build": "cd pb && go env -w CGO_ENABLED=0 && go build",
 		"pocket:serve": "cd pb && pocketbase serve",
 		"types": "npx pocketbase-typegen --db ./pb/pb_data/data.db --out src/lib/pocketbase-types.ts",
-		"seed": "tsx --env-file=.env seed.ts"
+		"seed": "tsx --env-file=.env seed.ts",
+		"prod:windows": "npm run pocket:serve & node index.js & node ../comm/index.js",
+		"prod:bun": "npm run pocket:serve & bun run ./build/index.js & bun run ../comm/index.js"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^3.0.0",
 		"@sveltejs/adapter-node": "^5.2.0",
 		"@sveltejs/kit": "^2.0.0",
 		"@sveltejs/vite-plugin-svelte": "^3.0.0",
+		"@threlte/core": "^8.0.0-next.12",
+		"@threlte/extras": "^9.0.0-next.19",
+		"@types/bun": "^1.1.6",
 		"@types/eslint": "^8.56.7",
+		"@types/express": "^4.17.21",
 		"@types/node": "^20.14.10",
+		"@types/three": "^0.166.0",
 		"autoprefixer": "^10.4.19",
 		"concurrently": "^8.2.2",
 		"daisyui": "^4.12.10",
+		"dotenv": "^16.4.5",
 		"eslint": "^9.0.0",
 		"eslint-config-prettier": "^9.1.0",
 		"eslint-plugin-svelte": "^2.36.0",
 		"globals": "^15.0.0",
+		"pocketbase": "^0.21.3",
 		"postcss": "^8.4.39",
 		"prettier": "^3.1.1",
 		"prettier-plugin-svelte": "^3.1.2",
-		"svelte": "^5.0.0-next.183",
+		"svelte": "^5.0.0-next.190",
 		"svelte-check": "^3.6.0",
 		"tailwindcss": "^3.4.4",
 		"tailwindcss-3d": "^1.0.6",
+		"three": "^0.166.1",
 		"tslib": "^2.4.1",
 		"tsx": "^4.16.2",
 		"typescript": "^5.0.0",
@@ -45,11 +55,6 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@threlte/core": "^8.0.0-next.8",
-		"@threlte/extras": "^9.0.0-next.13",
-		"@types/three": "^0.166.0",
-		"dotenv": "^16.4.5",
-		"pocketbase": "^0.21.3",
-		"three": "^0.166.1"
+		"hyper-express": "^6.16.4"
 	}
 }

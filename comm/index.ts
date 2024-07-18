@@ -2,7 +2,7 @@ import { SerialPort } from "serialport";
 import { ReadlineParser } from '@serialport/parser-readline';
 import { usb } from "usb";
 import PocketBase from 'pocketbase';
-import type { CommPortsResponse, SensorsResponse, TypedPocketBase } from "./../svelte/src/lib/pocketbase-types"
+import type { CommPortsResponse, TypedPocketBase } from "./../svelte/src/lib/pocketbase-types"
 import { createInterface } from "readline";
 import eventsource from 'eventsource';
 // @ts-expect-error Polyfill
@@ -14,7 +14,7 @@ if(!adminEmail) throw new Error("No admin email provided");
 const adminPassword = process.env.PB_ADMIN_PASSWORD;
 if(!adminPassword) throw new Error("No admin password provided");
 
-const pb = new PocketBase('http://127.0.0.1:8090') as TypedPocketBase;
+const pb = new PocketBase(process.env.PB_URL ?? 'http://127.0.0.1:8090') as TypedPocketBase;
 await pb.admins.authWithPassword(adminEmail, process.env.PB_ADMIN_PASSWORD as string);
 const commPorts = await pb.collection("CommPorts").getFullList<CommPortsResponse>();
 const cardLookup = await pb.collection("Cards").getFullList();
