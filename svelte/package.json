@@ -15,8 +15,9 @@
 		"pocket:serve": "cd pb && ./pocketbase serve",
 		"types": "npx pocketbase-typegen --db ./pb/pb_data/data.db --out src/lib/pocketbase-types.ts",
 		"seed": "tsx --env-file=.env seed.ts",
-		"prod": "concurrently --kill-others \"node index.js\"  \"node ../comm/index.js\"",
-		"prod:bun": "concurrently --kill-others \"bun ./build/index.js\" \"node ../comm/index.js\""
+		"prod": "pm2 start index.js --name pocketSvelte & pm2 start ../comm/index.js --name pocketComm",
+		"prod:restart": "pm2 restart pocketSvelte & pm2 restart pocketComm",
+		"prod:stop": "pm2 stop pocketSvelte & pm2 stop pocketComm"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-node": "^5.2.0",
@@ -54,6 +55,7 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"hyper-express": "^6.16.4"
+		"hyper-express": "^6.16.4",
+		"pm2": "^5.4.2"
 	}
 }

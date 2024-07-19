@@ -7,11 +7,26 @@ else
     pb/pocketbase serve &
 fi
 
-if ! command -v bun &> /dev/null
+
+
+echo "Running server with pm2 node and hyper-express"
+if lsof -Pi :3000 -sTCP:LISTEN -t >/dev/null
 then
-    echo "Running server with node and hyper-express"
-    npm run prod
+    echo "Reloading running server"
+    npm run prod:restart &
 else
-    echo "Running server bun"
-    bun run prod:bun
+    npm run prod &
 fi
+
+# if ! command -v bun &> /dev/null
+# then
+
+# else
+#     if lsof -Pi :3000 -sTCP:LISTEN -t >/dev/null
+#     then
+#         echo "Killing running server"
+#         fuser -k 3000/tcp
+#     fi
+#     echo "Running server with bun"
+#     bun run prod:bun &
+# fi
