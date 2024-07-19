@@ -13,5 +13,5 @@ then
     npm run prod
 else
     echo "Running server bun"
-    bun run build
+    bun run prod:bun
 fi
