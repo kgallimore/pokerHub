@@ -71,8 +71,7 @@ function attachSerialPorts() {
     for (const port of ports.filter(p=> !Object.keys(serialPorts).includes(p.path))) {
       const portNum = port.path.match(/\d+/)?.[0] as string;
       if (
-        !port.manufacturer?.toLowerCase().includes("arduino") &&
-          !port.manufacturer?.toLowerCase().includes("microsoft")
+        !["arduino", "espressif"].includes(port.manufacturer?.toLowerCase() ?? "")
       ){
         console.log(`Skipping: ${port.path} as the manufacturer is not expected: ${port.manufacturer}`);
         continue;
