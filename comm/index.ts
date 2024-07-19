@@ -80,7 +80,7 @@ function attachSerialPorts() {
         console.log("Port already open, skipping: " + port.path);
         continue;
       }
-      console.log("Found Arduino, attaching: " + port.path);
+      console.log("Found micro-controller, attaching: " + port.path);
       const newPort = new SerialPort({ path: port.path, baudRate: 115200 });
       newPort.pipe(new ReadlineParser());
       serialPorts[portNum] = {
