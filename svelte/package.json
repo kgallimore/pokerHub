@@ -15,8 +15,8 @@
 		"pocket:serve": "cd pb && pocketbase serve",
 		"types": "npx pocketbase-typegen --db ./pb/pb_data/data.db --out src/lib/pocketbase-types.ts",
 		"seed": "tsx --env-file=.env seed.ts",
-		"prod:windows": "npm run pocket:serve & node index.js & node ../comm/index.js",
-		"prod:bun": "npm run pocket:serve & bun run ./build/index.js & bun run ../comm/index.js"
+		"prod": "concurrently --kill-others \"npm run pocket:serve\" \"node index.js\"  \"node ../comm/index.js\"",
+		"prod:bun": "concurrently --kill-others \"npm run pocket:serve\"  \"bun run ./build/index.js\" \"bun run ../comm/index.js\""
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^3.0.0",
