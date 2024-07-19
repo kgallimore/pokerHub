@@ -10,13 +10,7 @@ fi
 
 
 echo "Running server with pm2 node and hyper-express"
-if lsof -Pi :3000 -sTCP:LISTEN -t >/dev/null
-then
-    echo "Reloading running server"
-    npm run prod:restart &
-else
-    npm run prod &
-fi
+npm run prod &
 
 # if ! command -v bun &> /dev/null
 # then
