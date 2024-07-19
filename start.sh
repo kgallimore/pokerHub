@@ -1,15 +1,17 @@
 #!/bin/bash
-git pull
 cd svelte
-pb/pocketbase serve &
-sleep 1
+if lsof -Pi :8090 -sTCP:LISTEN -t >/dev/null
+then
+    echo "Pocketbase is already running"
+else
+    pb/pocketbase serve &
+fi
+
 if ! command -v bun &> /dev/null
 then
-    npm i
-    npm run build
+    echo "Running server with node and hyper-express"
     npm run prod
 else
-    bun i
+    echo "Running server bun"
     bun run build
-    bun run prod:bun
 fi
